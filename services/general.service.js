@@ -22,7 +22,7 @@ class GeneralService {
                 "detail": ""
             };
             return objetoEnvio;
-          } catch (error) {
+        } catch (error) {
             let objetoError = {
                 "data": [],
                 "error": 1
@@ -34,13 +34,43 @@ class GeneralService {
                 "details": error
             });
             return objetoError;
-          }
+        }
     }
 
-    async addStudent(){
+    async getGenders(){
         try{
             await sql.connect(sqlConfig);
-            const result = await sql.query(`EXEC sp_alta_estudiante`);
+            const result = await sql.query`EXEC sp_traer_generos`;
+            let objetoEnvio = {
+                "data": result.recordset,
+                "error": 0,
+                "detail": ""
+            };
+            return objetoEnvio;
+        } catch (error) {
+            let objetoError = {
+                "data": [],
+                "error": 1
+            };
+            console.log({
+                "function": "prueba de trabajo: getGenders",
+                "date": fechaAhora,
+                "errors": "Error en el servicio. Comuníquece con Servicio al Cliente.",
+                "details": error
+            });
+            return objetoError;
+        }
+    }
+
+    async addStudent(data){
+        try{
+            await sql.connect(sqlConfig);
+            var result = await sql.query(`EXEC sp_alta_estudiante '` + data.nombre_estudiante + `', '`
+                                                                     + data.ap_paterno + `', '`
+                                                                     + data.ap_materno + `', `
+                                                                     + data.edad + `, `
+                                                                     + data.genero);
+
             return result.recordset[0];
         } catch (error) {
             let objetoError = {
